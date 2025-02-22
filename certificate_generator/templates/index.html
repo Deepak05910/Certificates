@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Certificate Generator</title>
+    <script>
+        async function getCertificate() {
+            let name = document.getElementById("name").value;
+            let response = await fetch("/get_certificate", {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({name: name})
+            });
+            
+            if (response.ok) {
+                let blob = await response.blob();
+                let url = window.URL.createObjectURL(blob);
+                let a = document.createElement("a");
+                a.href = url;
+                a.download = name + "_certificate.png";
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+            } else {
+                alert("Name not found in database.");
+            }
+        }
+    </script>
+</head>
+<body>
+    <h1>Download Your Certificate</h1>
+    <input type="text" id="name" placeholder="Enter Your Name">
+    <button onclick="getCertificate()">Download</button>
+</body>
+</html>
